@@ -78,7 +78,7 @@ bot.on('message', async event => {
                   text: exit,
                   size: 'xxl',
                   weight: 'bold',
-                  color: '#89916B',
+                  color: '#B1B479',
                   style: 'normal',
                   decoration: 'none',
                   align: 'start',
