@@ -1,213 +1,141 @@
-// 引用 line 機器人套件
 import linebot from 'linebot'
-// 引用 dotenv 套件
 import dotenv from 'dotenv'
-// 引用 axios 套件
+import MRT from './MRTdata.js'
 import axios from 'axios'
-// 引用 node-schedule
-import schedule from 'node-schedule'
 
-let exhubitions = []
+const MRTinfo = []
 
-const updateData = async () => {
-  const response = await axios.get('https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6')
-  exhubitions = response.data
-}
-schedule.scheduleJob('* * 0 * * *', () => {
-  updateData()
-})
-
-updateData()
-
-// 讀取 .env
 dotenv.config()
 
-// 設定機器人
 const bot = linebot({
   channelId: process.env.CHANNEL_ID,
   channelSecret: process.env.CHANNEL_SECRET,
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
 })
+function distance (lat1, lon1, lat2, lon2, unit) {
+  if ((lat1 === lat2) && (lon1 === lon2)) {
+    return 0
+  } else {
+    var radlat1 = Math.PI * lat1 / 180
+    var radlat2 = Math.PI * lat2 / 180
+    var theta = lon1 - lon2
+    var radtheta = Math.PI * theta / 180
+    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta)
+    if (dist > 1) {
+      dist = 1
+    }
+    dist = Math.acos(dist)
+    dist = dist * 180 / Math.PI
+    dist = dist * 60 * 1.1515
+    if (unit == 'K') { dist = dist * 1.609344 }
+    if (unit == 'N') { dist = dist * 0.8684 }
+    return dist
+  }
+}
 
 bot.on('message', async event => {
   try {
-    let reply
-    const text = event.message.text
-    if (text === 'flex') {
-      reply = {
-        type: 'flex',
-        altText: 'Flex',
-        contents: {
-          type: 'carousel',
-          contents: [
-            {
-              type: 'bubble',
-              hero: {
-                type: 'image',
-                url: 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png',
-                size: 'full',
-                aspectRatio: '20:13',
-                aspectMode: 'cover',
-                action: {
-                  type: 'uri',
-                  uri: 'http://linecorp.com/'
+    const lat2 = event.message.latitude
+    const lon2 = event.message.longitude
+
+    let reply = ''
+    const a = MRT.features
+    let b = distance(a[0].properties.緯度, a[0].properties.經度, lat2, lon2, 'K')
+    let exit = a[0].properties.出入口名稱
+    let lat3 = a[0].properties.緯度
+    let lon3 = a[0].properties.經度
+    let exitNumber = a[0].properties.出入口編號
+
+    for (let i = 0; i < a.length; i++) {
+      const lat1 = a[i].properties.緯度
+      const lon1 = a[i].properties.經度
+
+      const dis = distance(lat1, lon1, lat2, lon2, 'K')
+
+      if (dis < b) {
+        b = dis
+        exit = a[i].properties.出入口名稱
+        lat3 = a[i].properties.緯度
+        lon3 = a[i].properties.經度
+        exitNumber = a[i].properties.出入口編號
+      }
+    }
+    b = Math.ceil(b * 1000).toString()
+    reply = {
+      type: 'flex',
+      altText: 'Flex',
+      contents: {
+        type: 'carousel',
+        contents: [
+          {
+            type: 'bubble',
+            header: {
+              type: 'box',
+              layout: 'vertical',
+              contents: [
+                {
+                  type: 'text',
+                  text: exit,
+                  size: 'xxl',
+                  weight: 'bold',
+                  color: '#89916B',
+                  style: 'normal',
+                  decoration: 'none',
+                  align: 'start',
+                  margin: '10px'
+                },
+                {
+                  type: 'text',
+                  text: exitNumber + '號出口',
+                  margin: '20px',
+                  color: '#373C38'
+                },
+                {
+                  type: 'text',
+                  text: '距離' + b + '公尺',
+                  color: '#91989F'
                 }
-              },
-              body: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                  {
-                    type: 'text',
-                    text: 'Brown Cafe',
-                    weight: 'bold',
-                    size: 'xl'
+              ],
+              position: 'relative',
+              height: '130px'
+            },
+            footer: {
+              type: 'box',
+              layout: 'vertical',
+              contents: [
+                {
+                  type: 'button',
+                  action: {
+                    type: 'uri',
+                    label: '開啟地圖',
+                    uri: 'https://www.google.com.tw/maps/search/' + lat3 + ',' + lon3
                   },
-                  {
-                    type: 'box',
-                    layout: 'baseline',
-                    margin: 'md',
-                    contents: [
-                      {
-                        type: 'icon',
-                        size: 'sm',
-                        url: 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png'
-                      },
-                      {
-                        type: 'icon',
-                        size: 'sm',
-                        url: 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png'
-                      },
-                      {
-                        type: 'icon',
-                        size: 'sm',
-                        url: 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png'
-                      },
-                      {
-                        type: 'icon',
-                        size: 'sm',
-                        url: 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png'
-                      },
-                      {
-                        type: 'icon',
-                        size: 'sm',
-                        url: 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png'
-                      },
-                      {
-                        type: 'text',
-                        text: '4.0',
-                        size: 'sm',
-                        color: '#999999',
-                        margin: 'md',
-                        flex: 0
-                      }
-                    ]
-                  },
-                  {
-                    type: 'box',
-                    layout: 'vertical',
-                    margin: 'lg',
-                    spacing: 'sm',
-                    contents: [
-                      {
-                        type: 'box',
-                        layout: 'baseline',
-                        spacing: 'sm',
-                        contents: [
-                          {
-                            type: 'text',
-                            text: 'Place',
-                            color: '#aaaaaa',
-                            size: 'sm',
-                            flex: 1
-                          },
-                          {
-                            type: 'text',
-                            text: 'Miraina Tower, 4-1-6 Shinjuku, Tokyo',
-                            wrap: true,
-                            color: '#666666',
-                            size: 'sm',
-                            flex: 5
-                          }
-                        ]
-                      },
-                      {
-                        type: 'box',
-                        layout: 'baseline',
-                        spacing: 'sm',
-                        contents: [
-                          {
-                            type: 'text',
-                            text: 'Time',
-                            color: '#aaaaaa',
-                            size: 'sm',
-                            flex: 1
-                          },
-                          {
-                            type: 'text',
-                            text: '10:00 - 23:00',
-                            wrap: true,
-                            color: '#666666',
-                            size: 'sm',
-                            flex: 5
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              footer: {
-                type: 'box',
-                layout: 'vertical',
-                spacing: 'sm',
-                contents: [
-                  {
-                    type: 'button',
-                    style: 'link',
-                    height: 'sm',
-                    action: {
-                      type: 'uri',
-                      label: 'CALL',
-                      uri: 'https://linecorp.com'
-                    }
-                  },
-                  {
-                    type: 'button',
-                    style: 'link',
-                    height: 'sm',
-                    action: {
-                      type: 'uri',
-                      label: 'WEBSITE',
-                      uri: 'https://linecorp.com'
-                    }
-                  },
-                  {
-                    type: 'spacer',
-                    size: 'sm'
-                  }
-                ],
-                flex: 0
+                  style: 'primary',
+                  color: '#86A697',
+                  height: 'md',
+                  margin: '10px'
+                }
+              ]
+            },
+            styles: {
+              header: {
+                separator: true
               }
             }
-          ]
-        }
+          }
+        ]
       }
-    } else {
-      for (const data of exhubitions) {
-        if (data.title === text) {
-          reply = data.showInfo[0].locationName
-          break
-        }
-      }
-      reply = (reply.length === 0) ? '找不到資料' : reply
     }
+    reply = (reply.length === 0) ? '找不到資料' : reply
+    console.log(exit)
     event.reply(reply)
   } catch (error) {
+    console.log(error)
     event.reply('發生錯誤')
   }
 })
 
+// 監聽
 bot.listen('/', process.env.PORT, () => {
   console.log('機器人已啟動')
 })
