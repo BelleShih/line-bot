@@ -59,7 +59,7 @@ bot.on('message', async event => {
         lat3 = a[i].properties.緯度
         lon3 = a[i].properties.經度
         exitNumber = a[i].properties.出入口編號
-        walkTime = Math.round( b * 1000 / 80 ).toString()
+        walkTime = Math.round( b * 1000 / 75 ).toString()
       }
     }
     b = Math.ceil(b * 1000).toString()
