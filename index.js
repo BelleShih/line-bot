@@ -75,6 +75,12 @@ bot.on('message', async event => {
               contents: [
                 {
                   type: 'text',
+                  text: '離地點最近的捷運出口是...',
+                  color: '#91989F',
+                  size: 'sm'
+                },
+                {
+                  type: 'text',
                   text: exit,
                   size: 'xxl',
                   weight: 'bold',
