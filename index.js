@@ -59,10 +59,11 @@ bot.on('message', async event => {
         lat3 = a[i].properties.緯度
         lon3 = a[i].properties.經度
         exitNumber = a[i].properties.出入口編號
-        walkTime = Math.round( b/108 )
+        walkTime = Math.round( b / 108 ).toString()
       }
     }
     b = Math.ceil(b * 1000).toString()
+    
     reply = {
       type: 'flex',
       altText: 'Flex',
@@ -110,7 +111,7 @@ bot.on('message', async event => {
                 }
               ],
               position: 'relative',
-              height: '200px'
+              height: '180px'
             },
             footer: {
               type: 'box',
