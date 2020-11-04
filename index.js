@@ -45,6 +45,7 @@ bot.on('message', async event => {
     let lat3 = a[0].properties.緯度
     let lon3 = a[0].properties.經度
     let exitNumber = a[0].properties.出入口編號
+    let walkTime = 0
 
     for (let i = 0; i < a.length; i++) {
       const lat1 = a[i].properties.緯度
@@ -58,6 +59,7 @@ bot.on('message', async event => {
         lat3 = a[i].properties.緯度
         lon3 = a[i].properties.經度
         exitNumber = a[i].properties.出入口編號
+        walkTime = Math.round( b/108 )
       }
     }
     b = Math.ceil(b * 1000).toString()
@@ -100,10 +102,15 @@ bot.on('message', async event => {
                   type: 'text',
                   text: '距離' + b + '公尺',
                   color: '#91989F'
+                },
+                {
+                  type: 'text',
+                  text: '徒步約' + walkTime + '分鐘',
+                  color: '#91989F'
                 }
               ],
               position: 'relative',
-              height: '130px'
+              height: '200px'
             },
             footer: {
               type: 'box',
