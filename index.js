@@ -59,7 +59,7 @@ bot.on('message', async event => {
         lat3 = a[i].properties.緯度
         lon3 = a[i].properties.經度
         exitNumber = a[i].properties.出入口編號
-        walkTime = Math.round( b * 1000 / 108 ).toString()
+        walkTime = Math.round( b * 1000 / 80 ).toString()
       }
     }
     b = Math.ceil(b * 1000).toString()
@@ -91,7 +91,7 @@ bot.on('message', async event => {
                   style: 'normal',
                   decoration: 'none',
                   align: 'start',
-                  margin: '10px'
+                  margin: '13px'
                 },
                 {
                   type: 'text',
@@ -103,6 +103,7 @@ bot.on('message', async event => {
                   type: 'text',
                   text: '距離' + b + '公尺',
                   color: '#91989F'
+                  margin: '10px'
                 },
                 {
                   type: 'text',
