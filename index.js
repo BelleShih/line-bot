@@ -102,7 +102,7 @@ bot.on('message', async event => {
                 {
                   type: 'text',
                   text: '距離' + b + '公尺',
-                  color: '#91989F'
+                  color: '#91989F',
                   margin: '10px'
                 },
                 {
