@@ -12,6 +12,7 @@ const bot = linebot({
   channelSecret: process.env.CHANNEL_SECRET,
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
 })
+// 計算距離公式
 function distance (lat1, lon1, lat2, lon2, unit) {
   if ((lat1 === lat2) && (lon1 === lon2)) {
     return 0
@@ -33,7 +34,7 @@ function distance (lat1, lon1, lat2, lon2, unit) {
   }
 }
 
-bot.on('message', async event => {
+bot.on('message', async event => {  
   try {
     const lat2 = event.message.latitude
     const lon2 = event.message.longitude
@@ -47,6 +48,7 @@ bot.on('message', async event => {
     let exitNumber = a[0].properties.出入口編號
     let walkTime = 0
 
+  if (event.message.type === 'location') {  
     for (let i = 0; i < a.length; i++) {
       const lat1 = a[i].properties.緯度
       const lon1 = a[i].properties.經度
@@ -63,7 +65,7 @@ bot.on('message', async event => {
       }
     }
     b = Math.ceil(b * 1000).toString()
-    
+
     reply = {
       type: 'flex',
       altText: 'Flex',
@@ -141,6 +143,9 @@ bot.on('message', async event => {
         ]
       }
     }
+    
+  } 
+    
     reply = (reply.length === 0) ? '找不到資料' : reply
     console.log(exit)
     event.reply(reply)
@@ -150,7 +155,7 @@ bot.on('message', async event => {
   }
 })
 
-// 監聽
+// 監聽用
 bot.listen('/', process.env.PORT, () => {
   console.log('機器人已啟動')
 })
