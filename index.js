@@ -146,7 +146,7 @@ bot.on('message', async event => {
     
   } 
     
-    reply = (reply.length === 0) ? '找不到資料' : reply
+    reply = (reply.length === 0) ? '請提供定位資訊給我喔(⁎⁍̴̛ᴗ⁍̴̛⁎)' : reply
     console.log(exit)
     event.reply(reply)
   } catch (error) {
