@@ -64,7 +64,7 @@ bot.on('message', async event => {
         walkTime = Math.round( b * 1000 / 75 ).toString()
       }
     }
-    if ( parseInt(exitNumber) = 0 ) {
+    if ( parseInt(exitNumber) === 0 ) {
       exitNumber = '只有一個出口'
     } else {
       exitNumber = exitNumber + '號出口'
