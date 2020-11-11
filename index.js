@@ -64,6 +64,11 @@ bot.on('message', async event => {
         walkTime = Math.round( b * 1000 / 75 ).toString()
       }
     }
+    if ( parseInt(exitNumber) = 0 ) {
+      exitNumber = '只有一個出口'
+    } else {
+      exitNumber = exitNumber + '號出口'
+    }
     b = Math.ceil(b * 1000).toString()
 
     reply = {
@@ -97,7 +102,7 @@ bot.on('message', async event => {
                 },
                 {
                   type: 'text',
-                  text: exitNumber + '號出口',
+                  text: exitNumber,
                   margin: '20px',
                   color: '#373C38'
                 },
