@@ -10,4 +10,5 @@
 4. 靜待3秒，就會收到機器人為您找到的捷運出口囉!
 
 #### 使用ID加入LINE好友 : @338dgzly
-#### 報出口QRcode : ![報出口QRcode](https://i.imgur.com/69e3S2O.png)
+#### 報出口QRcode : 
+![報出口QRcode](https://i.imgur.com/69e3S2O.png)
