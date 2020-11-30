@@ -119,7 +119,7 @@ bot.on('message', async event => {
                 }
               ],
               position: 'relative',
-              height: '180px'
+              height: '200px'
             },
             footer: {
               type: 'box',
